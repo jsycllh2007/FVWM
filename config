@@ -20,7 +20,6 @@ OpaqueMoveSize unlimited
 BugOpts FlickeringMoveWorkaround Off
 SnapGrid 1 1
 
-
 #############################
 #   FvwmEvent
 ###############################
@@ -38,17 +37,19 @@ AddToFunc StartFunction
 + I Module FvwmEvent
 + I Module FvwmButtons
 + I Module FvwmPager
-+ I Test (Init) Exec  feh --bg-scale $[walldir]/macosx.jpg &
++ I Test (Init) Exec  feh --bg-scale $[walldir]/wallpaper.jpg &
 #+ I Exec sleep 3 && conky -c $[FVWM_USERDIR]/ownfiles/conkyrc
 + I Exec fcitx -d
+#+ I Exec compton --config ~/.compton.conf
 + I Exec compton --config $[FVWM_USERDIR]/.compton.conf &
 + I Exec xeyes -geometry 70x50-20+60
++ I Exec xrdb ~/.Xdefault
 
 DestroyFunc ExitFunction
 AddToFunc ExitFunction
 + I Exec rm $[FVWM_USERDIR]/images/tmp/icon.tmp*
-#+ I Exec killall conky
 + I Exec killall xeyes
++ I Exec killall fcitx
 
 DestroyFunc MaximizeFunc
 AddToFunc MaximizeFunc
@@ -61,6 +62,7 @@ AddToFunc MaximizeTitleBarFunc
 + I Raise
 + D Maximize ewmhiwa 
 + M Move
+
 
 AddToFunc ResizeFunc 
 + I EWMHActivateWindowFunc
@@ -83,7 +85,7 @@ AddToFunc MarkWindowAsActiveFunc
 DestroyFunc RootLeftClick
 AddToFunc RootLeftClick
 + M Current (CurrentPage, !Iconic) MoveFunc
-+ D All (CurrentPage, !Iconic, !Shaded, !MPlayer) Iconify on
++ D All (CurrentPage, !Iconic, !Shaded, !SMPlayer) Iconify on
 
 DestroyFunc RootRightClick 
 AddToFunc RootRightClick
@@ -194,7 +196,7 @@ AddToFunc WindowOpsFuncAdv
 Style * Colorset 1, HilightColorset 1
 Style * BorderWidth 0, HandleWidth 2, BorderColorset 6, HilightBorderColorset 6
 
-Style * Font "StringEncoding=UTF-8:xft:YaHei Consolas Hybrid:size=9:encoding=iso10646-1"
+Style * Font "StringEncoding=UTF-8:xft:YaHei\ Consolas\ Hybrid:size=9:encoding=iso10646-1"
 Style * IconBox $[vp.width]x$[vp.height]-5+215, IconFill t r, IconBackgroundPadding 0, IconBackgroundRelief 0
 Style * !EWMHMiniIconOverride, IconOverride, NoIconTitle
 Style * DecorateTransient, UseDecor WindowDecoration, !StickyStippledTitle, IndexedWindowName
@@ -212,7 +214,7 @@ Style FvwmConsole Title, Borders, !FixedSize
 
 #Style conky !Title, !Borders, Sticky
 Style xeyes !Title, !Borders, Sticky
-
+Style plank !Title, !Borders, Sticky
 #############################
 #   Mouse & Keyboard
 ###############################
@@ -246,7 +248,7 @@ Mouse 5		1 		A   Exec transset-df --dec 0.1 -i $[w.id]
 Mouse 1		R		N   StrokeFunc
 Stroke N456	0 	R	N   Exec xterm -ls
 Stroke N654	0 	R	N   Exec pcmanfm
-Stroke N852	0 	R	N   Exec firefox
+Stroke N852	0 	R	N   Exec vicaldi 
 #Stroke N258	0 	R	N   Exec audacious
 Stroke N456	0 	TSF4	N   Maximize True growright 0
 Stroke N654	0 	TSF4	N   Maximize True growleft  0
@@ -257,8 +259,7 @@ Key F4		A	C	Module FvwmForm FvwmFormQuit
 key r		A	C	Restart
 Key F2		A	M	None (*run) Exec grun || gmrun || fbrun || xfrun4
 Key t		A	C	Exec xterm -ls
-Key o		A	C	Exec firefox
-Key y		A	C	Exec xterm -e su - -cyast2
+Key o		A	C	Exec vivaldi 
 Key Tab		A	M	WindowList Root c c NoCurrentDeskTitle
 Key Print	A	A	Exec scrot -q 100 screen-%F_%H%M%S.jpg
 Key F4		A	M	ThisWindow (!Iconic, !Shaded) Close
@@ -372,7 +373,7 @@ DestroyModuleConfig FvwmPager
 *FvwmPager: Balloons	    All
 *FvwmPager: SmallFont	    none
 *FvwmPager: Font	    none
-*FvwmPager: BalloonFont	    "StringEncoding=UTF-8:xft:YaHei Consolas Hybrid:size=9:encoding=iso10646-1"
+*FvwmPager: BalloonFont	    "StringEncoding=UTF-8:xft:YaHei\ Consolas\ Hybrid:size=9:encoding=iso10646-1"
 *FvwmPager: BallonYOffset   +2
 *FvwmPager: WindowBorderWidth 1
 *FvwmPager: WindowLabelFormat ""
@@ -396,7 +397,7 @@ DestroyModuleConfig FvwmPager
 MenuStyle * 	MenuColorset 7, ActiveColorset 6
 MenuStyle *	BorderWidth 0, HilightBack, ActiveFore
 MenuStyle *	Hilight3DThickness 0, !Animation
-MenuStyle *	Font "StringEncoding=UTF-8:xft:iYaHei:size=9:encoding=iso10646-1"
+MenuStyle *	Font "StringEncoding=UTF-8:xft:YaHei\ Consolas\ Hybrid:size=9:encoding=iso10646-1"
 MenuStyle *	PopupDelayed, PopupDelay 300, PopdownImmediately, PopupOffset 1 400
 MenuStyle *	TitleUnderlines0, TrianglesSolid
 MenuStyle *	ItemFormat "%s%|%5.i%5.5l%5.5r%.5>%|%i"
@@ -416,7 +417,7 @@ AddToMenu "MenuFvwmRoot@$[FVWM_USERDIR]/images/menu/menu_side_black.png@"
 + *$[FVWM_USERDIR]/images/menu/menu_up.png* Title
 + "Terminal"%terminal.png%		Exec xterm -ls
 + "Pcmanfm"%pcmanfm.png%		Exec pcmanfm
-+ "Run.."%run.png%			Exec fbrun
++ "Run.."%run.png%			Exec dmenu
 + ""					Nop
 + "Accessories"%accessories.png%	Popup Accessories
 #+ "Games"%games.png%			Popup Games
@@ -425,17 +426,24 @@ AddToMenu "MenuFvwmRoot@$[FVWM_USERDIR]/images/menu/menu_side_black.png@"
 #+ "Office"%office.png%			Popup Office
 #+ "Media"%media.png%			Popup Media
 + "System Tools"%system.png%		Popup System
++ "openSUSE"%comix.png% Popup openSUSE
 + ""					Nop
 + "Preferences"%preferences.png%	Popup Preferences
 + "Restart Fvwm"%restart.png%		Restart
 + "Quit"%quit.png%			Quit
 + *$[FVWM_USERDIR]/images/menu/menu_down.png* Title
 
+DestroyMenu openSUSE
+PipeRead 'xdg_menu --charset UTF-8 --format fvwm2'
+AddToMenu openSUSE
++ "openSUSE menu"   Popup xdg_menu
+
 DestroyMenu Accessories
 AddToMenu Accessories Accessories
 #+ "Calculator"%calc.png%		Exec gcalctool
 + "Gvim"%gvim.png%			Exec xterm -e vim
-#+ "Leafpad"%leafpad.png%		Exec leafpad
++ "SMMplayer"%mplayer.png%     Exec SMplayer
++ "Leafpad"%leafpad.png%		Exec leafpad
 + "Root Terminal"%terminal.png%		Exec gksu xterm -ls
 + "Terminal"%terminal.png%		Exec xterm -ls
 #+ "Xarchiver"%xarchiver.png%		Exec xarchiver
@@ -456,7 +464,7 @@ AddToMenu Graphics Graphics
 DestroyMenu Internet
 AddToMenu Internet Internet
 #+ "Epiphany"%epiphany.png%		Exec epiphany
-+ "Firefox"%firefox.png%		Exec firefox
++ "Vivadli"%opera.png%		Exec vivaldi
 #+ "Opera"%opera.png%			Exec opera
 #+ "cGmail"%mail.png%			Exec cgmail
 
@@ -547,7 +555,6 @@ AddToMenu MenuScreenshot
 + "Screenshot"			Exec scrot -q 100 screen-%F_%H%M%S.jpg
 + "Screenshot (5s delay)"	Exec exec scrot 'screen-%F_%H%M%S.jpg' -d 5 -q 100
 + "Screenshot frame"		Exec scrot -b -s -q 100 screen-%F_%H%M%S.jpg
-
 ###################################################################
 # Date time
 # Clock {{{1
@@ -556,7 +563,7 @@ DestroyModuleConfig FvwmButtons-Clock: *
 *FvwmButtons-Clock: Geometry -22+10
 *FvwmButtons-Clock: BoxSize smart
 *FvwmButtons-Clock: ActiveColorset 7 
-*FvwmButtons-Clock: Colorset 7
+*FvwmButtons-Clock: Colorset 7 
 *FvwmButtons-Clock: Columns 2
 *FvwmButtons-Clock: Padding 2 2
 *FvwmButtons-Clock: Frame 0
@@ -566,17 +573,17 @@ Module FvwmButtons FvwmButtons-Clock
 ################## FvwmButtons-Dock ##############################
   #########################################################
 # Colors，设置FvwmButtons的颜色
-# 设置FvwmButtons的出现在屏幕的位置，+250-0的坐标刚好在屏幕的底部中间位置。
-# DestroyModuleConfig FvwmButtons-bar: *
-# *FvwmButtonsGeometry 280x32+700-10
-# *FvwmButtonsColorset 7
-# *FvwmButtonsColumns 7 
-# *FvwmButtonsRows 1 
-# *FvwmButtons(Icon '/usr/local/share/icons/Faenza-Dark/apps/32/system-restart.png', Action 'restart &')
-# *FvwmButtons(Icon '/usr/local/share/icons/Faenza-Darker/actions/32/gtk-quit.png', Action 'quit &')
-# *FvwmButtons(Icon '/usr/local/share/icons/Faenza/apps/32/stardict.png', Action 'Exec stardict &')
-# *FvwmButtons(Icon '/usr/local/share/racket/pkgs/icons/plt-32x32.png', Action 'Exec drracket &')
-# *FvwmButtons(Icon '/usr/local/share/icons/Faenza/apps/32/firefox.png', Action 'Exec firefox &')
-# *FvwmButtons(Icon '/usr/local/share/icons/Faenza/apps/32/xterm.png', Action 'Exec xterm -ls &')
-# *FvwmButtons(Icon '/usr/local/share/icons/Faenza/apps/32/nautilus.png', Action 'Exec pcmanfm &')
+ 设置FvwmButtons的出现在屏幕的位置，+250-0的坐标刚好在屏幕的底部中间位置。
+ DestroyModuleConfig FvwmButtons-bar: *
+ *FvwmButtonsGeometry 280x32+700-10
+ *FvwmButtonsColorset 7
+ *FvwmButtonsColumns 7 
+ *FvwmButtonsRows 1 
+ *FvwmButtons(Icon '/usr/share/icons/hicolor/32x32/apps/smplayer.png',  Action 'Exec smplayer &')
+ *FvwmButtons(Icon '/home/petit/.icons/Faenza/apps/32/virtualbox.png', Action 'Exec VirtualBox &')
+*FvwmButtons(Icon '/usr/share/icons/hicolor/32x32/apps/leafpad.png', Action 'Exec leafpad &')
+ *FvwmButtons(Icon '/usr/share/racket/collects/icons/plt-32x32.png', Action 'Exec drracket &')
+ *FvwmButtons(Icon '/usr/share/icons/hicolor/32x32/apps/vivaldi-beta.png', Action 'Exec vivaldi &')
+ *FvwmButtons(Icon '/home/petit/.icons/Faenza/apps/32/xterm.png', Action 'Exec xterm -ls &')
+ *FvwmButtons(Icon '/usr/share/icons/oxygen/32x32/apps/package_system_filemanager.png', Action 'Exec pcmanfm &')
 
