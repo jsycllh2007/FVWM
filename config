@@ -214,7 +214,7 @@ Style FvwmConsole Title, Borders, !FixedSize
 
 #Style conky !Title, !Borders, Sticky
 Style xeyes !Title, !Borders, Sticky
-Style plank !Title, !Borders, Sticky
+Style xterm !Title, !Borders, Sticky
 #############################
 #   Mouse & Keyboard
 ###############################
@@ -248,7 +248,7 @@ Mouse 5		1 		A   Exec transset-df --dec 0.1 -i $[w.id]
 Mouse 1		R		N   StrokeFunc
 Stroke N456	0 	R	N   Exec xterm -ls
 Stroke N654	0 	R	N   Exec pcmanfm
-Stroke N852	0 	R	N   Exec vicaldi 
+Stroke N852	0 	R	N   Exec firefox 
 #Stroke N258	0 	R	N   Exec audacious
 Stroke N456	0 	TSF4	N   Maximize True growright 0
 Stroke N654	0 	TSF4	N   Maximize True growleft  0
@@ -257,9 +257,9 @@ Stroke N258	0 	TSF4	N   Maximize True 0 growup
 #--------------------------------------------------------------------------
 Key F4		A	C	Module FvwmForm FvwmFormQuit
 key r		A	C	Restart
-Key F2		A	M	None (*run) Exec grun || gmrun || fbrun || xfrun4
+Key F2		A	M	None (*run) Exec dmenu_run -b -nb '#2d2d2d' -sb '#F33C58' || gmrun || fbrun || xfrun4
 Key t		A	C	Exec xterm -ls
-Key o		A	C	Exec vivaldi 
+Key o		A	C	Exec firefox 
 Key Tab		A	M	WindowList Root c c NoCurrentDeskTitle
 Key Print	A	A	Exec scrot -q 100 screen-%F_%H%M%S.jpg
 Key F4		A	M	ThisWindow (!Iconic, !Shaded) Close
@@ -271,8 +271,20 @@ Key Up		A 	MC	Current (CurrentPage, !Iconic) AnimatedMove keep w-7
 Key Down	A 	MC	Current (CurrentPage, !Iconic) AnimatedMove keep w+7
 Key Right	A 	MC	Current (CurrentPage, !Iconic) AnimatedMove w+7 w+0
 Key Left 	A	MC 	Current (CurrentPage, !Iconic) AnimatedMove w-7 w+0 
-Key Up		A	M	Exec amixer -q sset PCM 10%+
-Key Down	A	M	Exec amixer -q sset PCM 10%-
+Key Space   A   M   Move    $0 
+
+
+
+
+
+Key d 		A 	C       ResizeMove w+3 w w  w
+Key a 		A 	C       ResizeMove w-3 w w  w
+Key s 		A 	C       ResizeMove w w+3 w w
+Key w 		A 	C       ResizeMove w w-3 w w
+
+Key 0x1008FF13	A	A	Exec amixer -q sset Master 10%+
+Key 0x1008FF11	A	A	Exec amixer -q sset Master 10%-
+Key 0x1008FF12  A   A   Exec amixer -q sset Master toggle
 Key Left	A	M	Prev (CurrentPage, AcceptsFocus, !Iconic) EWMHActivateWindowFunc
 Key Right	A	M	Next (CurrentPage, AcceptsFocus, !Iconic) EWMHActivateWindowFunc
 key F6		A	C	FuncMoveCenter
@@ -417,7 +429,7 @@ AddToMenu "MenuFvwmRoot@$[FVWM_USERDIR]/images/menu/menu_side_black.png@"
 + *$[FVWM_USERDIR]/images/menu/menu_up.png* Title
 + "Terminal"%terminal.png%		Exec xterm -ls
 + "Pcmanfm"%pcmanfm.png%		Exec pcmanfm
-+ "Run.."%run.png%			Exec dmenu
++ "Run.."%run.png%			Exec dmenu_run -b -nb '#2d2d2d' -sb '#F33C58'
 + ""					Nop
 + "Accessories"%accessories.png%	Popup Accessories
 #+ "Games"%games.png%			Popup Games
@@ -426,17 +438,11 @@ AddToMenu "MenuFvwmRoot@$[FVWM_USERDIR]/images/menu/menu_side_black.png@"
 #+ "Office"%office.png%			Popup Office
 #+ "Media"%media.png%			Popup Media
 + "System Tools"%system.png%		Popup System
-+ "openSUSE"%comix.png% Popup openSUSE
 + ""					Nop
 + "Preferences"%preferences.png%	Popup Preferences
 + "Restart Fvwm"%restart.png%		Restart
 + "Quit"%quit.png%			Quit
 + *$[FVWM_USERDIR]/images/menu/menu_down.png* Title
-
-DestroyMenu openSUSE
-PipeRead 'xdg_menu --charset UTF-8 --format fvwm2'
-AddToMenu openSUSE
-+ "openSUSE menu"   Popup xdg_menu
 
 DestroyMenu Accessories
 AddToMenu Accessories Accessories
@@ -464,7 +470,7 @@ AddToMenu Graphics Graphics
 DestroyMenu Internet
 AddToMenu Internet Internet
 #+ "Epiphany"%epiphany.png%		Exec epiphany
-+ "Vivadli"%opera.png%		Exec vivaldi
++ "Firefox"%firefox.png%		Exec firefox 
 #+ "Opera"%opera.png%			Exec opera
 #+ "cGmail"%mail.png%			Exec cgmail
 
@@ -573,17 +579,17 @@ Module FvwmButtons FvwmButtons-Clock
 ################## FvwmButtons-Dock ##############################
   #########################################################
 # Colors，设置FvwmButtons的颜色
- 设置FvwmButtons的出现在屏幕的位置，+250-0的坐标刚好在屏幕的底部中间位置。
- DestroyModuleConfig FvwmButtons-bar: *
- *FvwmButtonsGeometry 280x32+700-10
- *FvwmButtonsColorset 7
- *FvwmButtonsColumns 7 
- *FvwmButtonsRows 1 
- *FvwmButtons(Icon '/usr/share/icons/hicolor/32x32/apps/smplayer.png',  Action 'Exec smplayer &')
- *FvwmButtons(Icon '/home/petit/.icons/Faenza/apps/32/virtualbox.png', Action 'Exec VirtualBox &')
-*FvwmButtons(Icon '/usr/share/icons/hicolor/32x32/apps/leafpad.png', Action 'Exec leafpad &')
- *FvwmButtons(Icon '/usr/share/racket/collects/icons/plt-32x32.png', Action 'Exec drracket &')
- *FvwmButtons(Icon '/usr/share/icons/hicolor/32x32/apps/vivaldi-beta.png', Action 'Exec vivaldi &')
- *FvwmButtons(Icon '/home/petit/.icons/Faenza/apps/32/xterm.png', Action 'Exec xterm -ls &')
- *FvwmButtons(Icon '/usr/share/icons/oxygen/32x32/apps/package_system_filemanager.png', Action 'Exec pcmanfm &')
+# 设置FvwmButtons的出现在屏幕的位置，+250-0的坐标刚好在屏幕的底部中间位置。
+# DestroyModuleConfig FvwmButtons-bar: *
+# *FvwmButtonsGeometry 280x32+700-10
+# *FvwmButtonsColorset 7
+# *FvwmButtonsColumns 7 
+# *FvwmButtonsRows 1 
+# *FvwmButtons(Icon '/usr/share/icons/hicolor/32x32/apps/smplayer.png',  Action 'Exec smplayer &')
+# *FvwmButtons(Icon '/home/petit/.icons/Faenza/apps/32/virtualbox.png', Action 'Exec VirtualBox &')
+# *FvwmButtons(Icon '/usr/share/icons/hicolor/32x32/apps/leafpad.png', Action 'Exec leafpad &')
+# *FvwmButtons(Icon '/usr/share/racket/collects/icons/plt-32x32.png', Action 'Exec drracket &')
+# *FvwmButtons(Icon '/usr/share/icons/hicolor/32x32/apps/vivaldi-beta.png', Action 'Exec vivaldi &')
+# *FvwmButtons(Icon '/home/petit/.icons/Faenza/apps/32/xterm.png', Action 'Exec xterm -ls &')
+# *FvwmButtons(Icon '/usr/share/icons/oxygen/32x32/apps/package_system_filemanager.png', Action 'Exec pcmanfm &')
 
